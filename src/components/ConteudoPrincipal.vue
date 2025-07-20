@@ -1,17 +1,35 @@
 <script lang="ts">
 
+import { textSpanOverlap } from 'typescript';
 import SelecionarIngredientes from './SelecionarIngredientes.vue';
 import SuaLista from './SuaLista.vue';
+import Footer from './Footer.vue';
 
 
 export default {
     data() {
         return {
-            ingredientes: ['Alho', 'Cebole', 'Pimentao', 'Ovo'],
+            ingredientes: [] as string[],
         }
     },
 
-    components: { SelecionarIngredientes, SuaLista }
+    components: { SelecionarIngredientes, SuaLista, Footer },
+
+    methods: {
+        adicionarIngrediente(ingrediente: string) {
+                
+            this.ingredientes.push(ingrediente);
+        
+        },
+
+        removerIngrediente(ingrediente: string) {
+            
+            const novo = this.ingredientes.filter(item => item !== ingrediente);
+        
+            this.ingredientes = novo;
+
+        }
+    }
 }
 
 </script>
@@ -22,9 +40,13 @@ export default {
         
         <SuaLista :ingredientes="ingredientes" />
 
-        <SelecionarIngredientes />
+        <SelecionarIngredientes 
+            @adicionar-ingrediente="adicionarIngrediente($event)" 
+            @remover-ingrediente="removerIngrediente($event)"
+        />
 
     </main>
+
 
 </template>
 
