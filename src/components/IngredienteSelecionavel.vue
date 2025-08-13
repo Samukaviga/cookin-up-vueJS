@@ -43,7 +43,7 @@ import Tag from './Tag.vue';
 
 <template>
     <button 
-        class="ingrediente" @click="aoClicar" :aria-pressed="selecionado">
+        class="ingrediente" @click="aoClicar" :aria-pressed="selecionado">    
         <Tag :texto="ingrediente" :ativa="selecionado" />
     </button>
 

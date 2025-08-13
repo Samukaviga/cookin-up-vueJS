@@ -1,32 +1,40 @@
 <script lang="ts">
 
-import { textSpanOverlap } from 'typescript';
 import SelecionarIngredientes from './SelecionarIngredientes.vue';
 import SuaLista from './SuaLista.vue';
 import Footer from './Footer.vue';
+import MonstrarReceitas from './MonstrarReceitas.vue';
+import { KeepAlive } from 'vue';
 
+type Pagina = 'SelecionarIngredientes' | 'MonstrarReceitas';
 
 export default {
     data() {
         return {
             ingredientes: [] as string[],
+            conteudo: 'SelecionarIngredientes' as Pagina,
         }
     },
 
-    components: { SelecionarIngredientes, SuaLista, Footer },
+    components: { SelecionarIngredientes, SuaLista, Footer, MonstrarReceitas },
 
     methods: {
         adicionarIngrediente(ingrediente: string) {
-                
+
             this.ingredientes.push(ingrediente);
-        
+
         },
 
         removerIngrediente(ingrediente: string) {
-            
+
             const novo = this.ingredientes.filter(item => item !== ingrediente);
-        
+
             this.ingredientes = novo;
+        },
+
+        navegar(pagina: Pagina) {
+
+            this.conteudo = pagina;
 
         }
     }
@@ -37,13 +45,18 @@ export default {
 <template>
 
     <main class="conteudo-principal">
-        
+
         <SuaLista :ingredientes="ingredientes" />
 
-        <SelecionarIngredientes 
-            @adicionar-ingrediente="adicionarIngrediente($event)" 
-            @remover-ingrediente="removerIngrediente($event)"
-        />
+
+        <KeepAlive include="SelecionarIngredientes">
+            <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'"
+                @adicionar-ingrediente="adicionarIngrediente($event)" @remover-ingrediente="removerIngrediente($event)"
+                @buscar-receitas="navegar('MonstrarReceitas')" />
+
+            <MonstrarReceitas v-else-if="conteudo === 'MonstrarReceitas'"
+                @editar-receitas="navegar('SelecionarIngredientes')" :ingredientes="ingredientes"></MonstrarReceitas>
+        </KeepAlive>
 
     </main>
 
